@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07110d">
+<meta name="description" content="OyuSec: laboratorio educativo de ciberseguridad en HTML, CSS y JavaScript."><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛡️</text></svg>"><title>OyuSec — Ethical Hacking Lab</title>
+<style>
+:root{--green:#47f5a0;--cyan:#56d9f7;--bg:#07110d;--panel:#0d1b15;--border:#244c38;--text:#d9fbe8;--muted:#91b6a0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 system-ui}
+header{padding:25px clamp(16px,4vw,45px);border-bottom:1px solid var(--border);background:#09150f}
+header h1{margin:0;font-size:clamp(25px,4vw,39px);letter-spacing:-1px}
+header h1 span{color:var(--green)}
+header p{margin:5px 0 0;color:var(--muted)}
+main{max-width:1250px;margin:auto;padding:25px clamp(12px,3vw,30px) 50px}
+.notice{border:1px solid #426b39;background:#142418;color:#c8f5b8;padding:12px 15px;border-radius:8px;margin-bottom:20px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.card,.panel{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:19px;min-width:0}
+.card span{font-size:25px}
+.card h3{margin:7px 0 3px}
+.muted,small{color:var(--muted)}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{margin-bottom:18px}
+.panel h2{font-size:18px;margin:0 0 13px}
+label{display:block;color:#b4d9c0;font-size:13px;margin:12px 0 5px}
+input,textarea,select{width:100%;padding:10px 11px;background:#06100b;color:var(--text);border:1px solid var(--border);border-radius:7px;font:inherit}
+textarea{resize:vertical;min-height:80px}
+button{font:inherit;cursor:pointer;color:var(--text);background:#163323;border:1px solid #326849;border-radius:7px;padding:9px 12px}
+button:hover{background:#21482f}
+.primary{background:#14673f;border-color:var(--green)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.row button{flex:0 1 auto}
+.result{margin-top:12px;padding:12px;background:#07120c;border:1px solid var(--border);border-radius:7px;overflow-wrap:anywhere;white-space:pre-wrap}
+.term{background:#020805;border:1px solid #26523a;border-radius:8px;padding:12px;font:13px/1.8 ui-monospace,monospace}
+#output{height:250px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--green)}
+.termform{display:flex;gap:8px;margin-top:8px}
+.termform span{color:var(--green);padding-top:9px;white-space:nowrap}
+.termform input{min-width:0}
+.check{display:flex;gap:9px;align-items:flex-start;margin:11px 0}
+.check input{width:auto;margin-top:5px;accent-color:var(--green)}
+.check label{margin:0;flex:1}
+footer{text-align:center;color:var(--muted);padding:20px;font-size:12px}
+@media(max-width:800px){.cards{grid-template-columns:1fr}.layout{grid-template-columns:1fr}}
+.bar{height:8px;background:#06100b;border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;width:0;transition:width .3s}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Oyu<span>Sec</span> // Security Lab</h1>
+  <p>Laboratorio educativo de seguridad informática</p>
+</header>
+
+<main>
+  <div class="notice">
+    ⚠️ Entorno educativo: analiza únicamente sistemas y recursos propios o para los que tengas autorización.
+    Las funciones de esta página no realizan escaneos de red ni ataques.
+  </div>
+
+  <section class="cards">
+    <div class="card"><span>⌨️</span><h3>Terminal</h3><p class="muted">Comandos educativos simulados.</p></div>
+    <div class="card"><span>🔐</span><h3>Contraseñas</h3><p class="muted">Evaluación local de características básicas.</p></div>
+    <div class="card"><span>🧪</span><h3>Laboratorios</h3><p class="muted">Ejercicios y lista de comprobación.</p></div>
+  </section>
+
+  <div class="layout">
+    <section class="panel">
+      <h2>⌨️ Terminal interactiva</h2>
+      <div class="term">
+        <div id="output">OyuSec Terminal v1.1
+Escribe help para consultar los comandos disponibles.
+No ejecuta comandos reales del sistema operativo.
+Usa ↑/↓ para el historial y Tab para autocompletar.</div>
+        <form id="termform" class="termform">
+          <span>oyu@oyusec:~$</span>
+          <input id="command" autocomplete="off" placeholder="help" aria-label="Comando">
+          <button class="primary">↵</button>
+        </form>
+      </div>
+      <div class="row">
+        <button data-cmd="help">help</button>
+        <button data-cmd="whoami">whoami</button>
+        <button data-cmd="ls">ls</button>
+        <button data-cmd="security">security</button>
+        <button data-cmd="clear">clear</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>🔐 Analizador de contraseñas</h2>
+      <p class="muted">La contraseña se analiza en esta página y no se envía a un servidor.</p>
+      <label for="password">Contraseña de prueba</label>
+      <input id="password" type="password" autocomplete="new-password" placeholder="Introduce una contraseña ficticia">
+      <div class="row"><button id="togglePassword">Mostrar / ocultar</button><button id="analyzePassword" class="primary">Analizar</button><button id="genPass">Generar contraseña</button></div>
+      <div class="bar"><i id="passBar"></i></div>
+      <div id="passwordResult" class="result" aria-live="polite">Esperando una contraseña de prueba.</div>
+    </section>
+
+    <section class="panel">
+      <h2>#️⃣ Generador de hashes</h2>
+      <p class="muted">Calcula el hash de un texto mediante Web Crypto API.</p>
+      <label for="hashInput">Texto que deseas resumir</label>
+      <textarea id="hashInput" placeholder="Escribe un texto de prueba..."></textarea>
+      <label for="algo">Algoritmo</label><select id="algo"><option value="SHA-256">SHA-256</option><option value="SHA-384">SHA-384</option><option value="SHA-512">SHA-512</option><option value="SHA-1">SHA-1 (obsoleto)</option></select>
+      <label for="hashFile">…o selecciona un archivo (tiene prioridad sobre el texto)</label><input type="file" id="hashFile">
+      <div class="row"><button id="generateHash" class="primary">Generar SHA-256</button><button id="copyHash">Copiar resultado</button></div>
+      <div id="hashResult" class="result" aria-live="polite">El hash aparecerá aquí.</div>
+    </section>
+
+    <section class="panel">
+      <h2>🌐 Analizador de URL</h2>
+      <p class="muted">Examina la estructura de una dirección. No determina por sí solo si es segura.</p>
+      <label for="urlInput">URL para analizar</label>
+      <input id="urlInput" placeholder="https://ejemplo.com/ruta">
+      <div class="row"><button id="analyzeUrl" class="primary">Analizar URL</button></div>
+      <div id="urlResult" class="result" aria-live="polite">Esperando una URL.</div>
+    </section>
+
+    <section class="panel">
+      <h2>🔣 Codificador / decodificador</h2>
+      <p class="muted">Codificar no es cifrar: Base64, URL y hexadecimal los revierte cualquiera.</p>
+      <label for="encIn">Texto</label><textarea id="encIn"></textarea>
+      <label for="encMode">Formato</label><select id="encMode"><option>Base64</option><option>URL</option><option>Hex</option></select>
+      <div class="row"><button id="encBtn" class="primary">Codificar</button><button id="decBtn">Decodificar</button></div>
+      <div id="encOut" class="result" aria-live="polite">El resultado aparecerá aquí.</div>
+    </section>
+
+    <section class="panel">
+      <h2>🛡️ Lista de comprobación de seguridad</h2>
+      <p class="muted">Marca los controles que hayas comprobado en tu propio equipo.</p>
+      <div id="checks">
+        <div class="check"><input type="checkbox" id="c1"><label for="c1">Sistema operativo y aplicaciones actualizados.</label></div>
+        <div class="check"><input type="checkbox" id="c2"><label for="c2">Autenticación multifactor activada cuando está disponible.</label></div>
+        <div class="check"><input type="checkbox" id="c3"><label for="c3">Copias de seguridad realizadas y verificadas.</label></div>
+        <div class="check"><input type="checkbox" id="c4"><label for="c4">Cortafuegos activado y configurado.</label></div>
+        <div class="check"><input type="checkbox" id="c5"><label for="c5">Permisos de usuario revisados.</label></div>
+        <div class="check"><input type="checkbox" id="c6"><label for="c6">Protección antimalware actualizada.</label></div>
+        <div class="check"><input type="checkbox" id="c7"><label for="c7">Recuperación de cuenta y contraseñas revisadas.</label></div>
+      </div>
+      <div class="row"><button id="saveChecks" class="primary">Guardar progreso</button><button id="resetChecks">Reiniciar</button><button id="reportChecks">Preparar informe</button></div>
+      <div id="checkResult" class="result" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <h2>🧪 Laboratorio de conceptos web</h2>
+      <p class="muted">Ejercicio defensivo: identifica por qué no se debe insertar texto de usuario directamente como HTML.</p>
+      <label for="labInput">Texto de prueba</label>
+      <input id="labInput" placeholder="Escribe texto para probar la salida segura">
+      <div class="row"><button id="safeOutput" class="primary">Mostrar como texto seguro</button></div>
+      <div id="labResult" class="result">La salida segura aparecerá aquí.</div>
+      <p class="muted">La aplicación trata la entrada como texto y no la ejecuta como HTML.</p>
+    </section>
+
+    <section class="panel">
+      <h2>📓 Cuaderno de prácticas</h2>
+      <label for="journal">Notas personales del laboratorio</label>
+      <textarea id="journal" placeholder="Anota el objetivo, las pruebas, los resultados y las medidas correctivas..."></textarea>
+      <div class="row"><button id="saveJournal" class="primary">Guardar notas</button><button id="downloadJournal">Exportar notas</button></div>
+      <p id="journalStatus" class="muted"></p>
+    </section>
+  </div>
+</main>
+
+<footer>OyuSec · Proyecto educativo de portfolio · HTML · CSS · JavaScript · Web Crypto API · v1.1</footer>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+
+const cmdHist=[],cmdList=["help","whoami","date","ls","pwd","security","about","clear","echo","uname","history","genpass","b64","sha256"];
+let hi=0;
+function terminalRun(raw){
+ const out=$("output");
+ const [cmd,...args]=raw.trim().split(/\s+/);
+ const arg=args.join(" ");
+ const commands={
+  help:"Comandos disponibles:\nhelp       Mostrar ayuda\nwhoami     Usuario del laboratorio\ndate       Fecha y hora\nls         Archivos de demostración\npwd        Directorio virtual\nsecurity   Recomendaciones básicas\nabout      Información del proyecto\nuname      Versión del laboratorio\nhistory    Comandos usados\ngenpass    Contraseña aleatoria segura\nb64 <txt>  Codificar en Base64\nsha256 <t> Hash SHA-256 de un texto\nclear      Limpiar terminal",
+  whoami:"oyu (usuario virtual del laboratorio)",
+  date:new Date().toLocaleString("es-ES"),
+  ls:"README.md  labs/  notes.txt  security-checklist",
+  pwd:"/home/oyu/lab",
+  about:"OyuSec: laboratorio educativo de ciberseguridad.",
+  security:"Actualiza tus sistemas.\nUsa MFA.\nHaz copias de seguridad.\nRevisa los permisos.\nNo abras enlaces sospechosos.",
+  echo:arg,
+  uname:"OyuSec 1.1 (simulado) x86_64",
+  history:cmdHist.map((c,i)=>(i+1)+"  "+c).join("\n")||"Sin historial.",
+  genpass:genPass(16),
+  b64:enc.Base64[0](arg)
+ };
+ if(cmd==="sha256"){crypto.subtle.digest("SHA-256",new TextEncoder().encode(arg)).then(h=>{out.textContent+="\noyu@oyusec:~$ "+raw+"\n"+Array.from(new Uint8Array(h),b=>b.toString(16).padStart(2,"0")).join("")+"\n";out.scrollTop=out.scrollHeight});return;}
+ if(cmd==="clear"){out.textContent="";return;}
+ const result=Object.hasOwn(commands,cmd)?commands[cmd]:"Comando desconocido. Escribe help.";
+ out.textContent+="\noyu@oyusec:~$ "+raw+"\n"+result+"\n";
+ out.scrollTop=out.scrollHeight;
+}
+$("termform").addEventListener("submit",e=>{
+ e.preventDefault();const v=$("command").value.trim();if(!v)return;
+ cmdHist.push(v);hi=cmdHist.length;terminalRun(v);$("command").value="";
+});
+$("command").addEventListener("keydown",e=>{
+ const i=$("command");
+ if(e.key==="ArrowUp"&&cmdHist.length){e.preventDefault();hi=Math.max(0,hi-1);i.value=cmdHist[hi];}
+ else if(e.key==="ArrowDown"){e.preventDefault();hi=Math.min(cmdHist.length,hi+1);i.value=cmdHist[hi]||"";}
+ else if(e.key==="Tab"){e.preventDefault();const m=cmdList.filter(c=>c.startsWith(i.value));if(m.length===1)i.value=m[0];}
+});
+document.querySelectorAll("[data-cmd]").forEach(b=>b.onclick=()=>{
+ const c=b.dataset.cmd;if(c==="clear"){$("output").textContent="";return;}terminalRun(c);
+});
+
+$("togglePassword").onclick=()=>{
+ const p=$("password");p.type=p.type==="password"?"text":"password";
+};
+const rnd=n=>{const a=new Uint32Array(1),lim=Math.floor(2**32/n)*n;do crypto.getRandomValues(a);while(a[0]>=lim);return a[0]%n;};
+function genPass(len){const cs="abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$%&*?-_";return Array.from({length:len||16},()=>cs[rnd(cs.length)]).join("");}
+function entropy(p){let pool=0;if(/[a-z]/.test(p))pool+=26;if(/[A-Z]/.test(p))pool+=26;if(/[0-9]/.test(p))pool+=10;if(/[^A-Za-z0-9]/.test(p))pool+=32;return pool?Math.round(p.length*Math.log2(pool)):0;}
+function fmtTime(s){if(s<1)return"menos de un segundo";if(s>3.15e9)return"más de 100 años";for(const[n,v]of[["años",31557600],["días",86400],["horas",3600],["minutos",60]])if(s>=v)return Math.round(s/v)+" "+n;return Math.round(s)+" segundos";}
+function analyzePass(){
+ const p=$("password").value,bar=$("passBar");
+ if(!p){$("passwordResult").textContent="Introduce una contraseña de prueba.";bar.style.width="0";return;}
+ let score=0,notes=[];
+ const common=/password|contraseña|qwerty|123456|admin|abc123|letmein/i.test(p);
+ if(p.length>=12)score++;else notes.push("Prueba una longitud de 12 caracteres o más.");
+ if(/[a-z]/.test(p)&&/[A-Z]/.test(p))score++;else notes.push("Considera combinar mayúsculas y minúsculas.");
+ if(/[0-9]/.test(p))score++;else notes.push("Considera incluir números.");
+ if(/[^A-Za-z0-9]/.test(p))score++;else notes.push("Considera incluir símbolos.");
+ if(/(.)\1{2,}/.test(p))notes.push("Evita secuencias con el mismo carácter repetido.");
+ if(common){notes.push("Evita palabras o secuencias muy comunes.");score=Math.min(score,1);}
+ let bits=entropy(p);if(common)bits=Math.min(bits,20);
+ bar.style.width=Math.min(100,bits/80*100)+"%";bar.style.background=["#f55","#f90","#fc3","#9e5","#47f5a0"][score];
+ $("passwordResult").textContent=
+  "Puntuación orientativa: "+score+"/4 ("+["Muy débil","Débil","Moderada","Buena","Fuerte"][score]+")\n"+
+  "Longitud: "+p.length+" caracteres\nEntropía estimada: ~"+bits+" bits\n"+
+  "Fuerza bruta offline (10.000 M intentos/s): "+fmtTime(Math.pow(2,bits-1)/1e10)+
+  (notes.length?"\n\nRecomendaciones:\n• "+notes.join("\n• "):"\n\nNo se han detectado los problemas básicos evaluados.")+
+  "\n\nEstimación simplificada: no comprueba filtraciones ni sustituye una auditoría real.";
+}
+$("analyzePassword").onclick=analyzePass;
+$("password").addEventListener("input",analyzePass);
+$("genPass").onclick=()=>{$("password").value=genPass(16);$("password").type="text";analyzePass();};
+
+$("generateHash").onclick=async()=>{
+ const text=$("hashInput").value;
+ if(!crypto.subtle){$("hashResult").textContent="Web Crypto API no disponible. Abre la página en un contexto seguro o en localhost.";return;}
+ try{
+  const f=$("hashFile").files[0];const data=f?await f.arrayBuffer():new TextEncoder().encode(text);
+  const hash=await crypto.subtle.digest($("algo").value,data);
+  $("hashResult").textContent=Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,"0")).join("");
+ }catch(e){$("hashResult").textContent="No se pudo generar el hash: "+e.message;}
+};
+$("copyHash").onclick=async()=>{
+ const value=$("hashResult").textContent;
+ try{await navigator.clipboard.writeText(value);alert("Resultado copiado.");}
+ catch{alert("No se pudo acceder al portapapeles. Selecciona el hash y cópialo manualmente.");}
+};
+
+$("analyzeUrl").onclick=()=>{
+ const raw=$("urlInput").value.trim();
+ if(!raw){$("urlResult").textContent="Introduce una URL.";return;}
+ try{
+  const u=new URL(raw);
+  const notes=[];
+  if(u.protocol!=="https:")notes.push("La URL no utiliza HTTPS.");
+  if(u.username||u.password)notes.push("La URL contiene información de usuario en la autoridad.");
+  if(u.hostname.startsWith("xn--")||u.hostname.split(".").some(x=>x.startsWith("xn--")))notes.push("Contiene un nombre de dominio codificado con Punycode; revisa posibles caracteres engañosos.");
+  if(/^\d{1,3}(\.\d{1,3}){3}$/.test(u.hostname))notes.push("El host es una dirección IP y no un dominio.");
+  if(u.hostname.split(".").length>4)notes.push("Tiene muchos subdominios; comprueba que el dominio real son las dos últimas partes.");
+  if(u.port&&!["80","443"].includes(u.port))notes.push("Usa un puerto no estándar.");
+  if(raw.length>200)notes.push("La URL es muy larga.");
+  if(!notes.length)notes.push("No se han encontrado las características básicas evaluadas. Esto no garantiza que el sitio sea seguro.");
+  $("urlResult").textContent=
+   "Protocolo: "+u.protocol+"\nDominio: "+u.hostname+
+   "\nPuerto: "+(u.port||"predeterminado")+
+   "\nRuta: "+u.pathname+
+   "\nParámetros: "+(u.search||"ninguno")+
+   "\n\nObservaciones:\n• "+notes.join("\n• ");
+ }catch{$("urlResult").textContent="La dirección no tiene un formato de URL válido. Incluye el protocolo, por ejemplo https://";}
+};
+
+const enc={
+ Base64:[x=>btoa(Array.from(new TextEncoder().encode(x),c=>String.fromCharCode(c)).join("")),x=>new TextDecoder().decode(Uint8Array.from(atob(x.trim()),c=>c.charCodeAt(0)))],
+ URL:[encodeURIComponent,decodeURIComponent],
+ Hex:[x=>Array.from(new TextEncoder().encode(x),b=>b.toString(16).padStart(2,"0")).join(" "),x=>new TextDecoder().decode(Uint8Array.from(x.trim().split(/\s+/),h=>{const n=parseInt(h,16);if(isNaN(n))throw 0;return n;}))]
+};
+function runEnc(i){try{$("encOut").textContent=enc[$("encMode").value][i]($("encIn").value);}catch{$("encOut").textContent="Entrada no válida para esta operación.";}}
+$("encBtn").onclick=()=>runEnc(0);$("decBtn").onclick=()=>runEnc(1);
+
+const checkIds=["c1","c2","c3","c4","c5","c6","c7"];
+function updateChecks(){
+ const done=checkIds.filter(id=>$(id).checked).length;
+ $("checkResult").textContent=`Controles marcados: ${done} de ${checkIds.length}.\nProgreso: ${Math.round(done/checkIds.length*100)}%.`;
+}
+function loadChecks(){
+ try{const arr=JSON.parse(localStorage.getItem("oyusec_checks")||"[]");checkIds.forEach((id,i)=>$(id).checked=!!arr[i]);}catch{}
+ updateChecks();
+}
+$("saveChecks").onclick=()=>{
+ localStorage.setItem("oyusec_checks",JSON.stringify(checkIds.map(id=>$(id).checked)));
+ updateChecks();$("checkResult").textContent+="\nProgreso guardado en este navegador.";
+};
+checkIds.forEach(id=>$(id).addEventListener("change",updateChecks));
+$("resetChecks").onclick=()=>{
+ if(!confirm("¿Reiniciar todos los controles?"))return;
+ checkIds.forEach(id=>$(id).checked=false);localStorage.removeItem("oyusec_checks");updateChecks();
+};
+$("reportChecks").onclick=()=>{
+ const rows=checkIds.map((id,i)=>`${$(id).checked?"[OK]":"[PENDIENTE]"} ${$(id).nextElementSibling.textContent}`);
+ const report="OYUSEC — INFORME DE COMPROBACIÓN\nFecha: "+new Date().toLocaleString("es-ES")+"\n\n"+rows.join("\n")+
+ "\n\nEste informe refleja las casillas marcadas manualmente, no una auditoría automática.";
+ const blob=new Blob([report],{type:"text/plain;charset=utf-8"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="oyusec-informe.txt";a.click();URL.revokeObjectURL(a.href);
+};
+
+$("safeOutput").onclick=()=>{
+ // textContent evita interpretar la entrada como HTML.
+ $("labResult").textContent=$("labInput").value||"No has introducido texto.";
+};
+
+$("journal").value=localStorage.getItem("oyusec_journal")||"";
+$("saveJournal").onclick=()=>{
+ localStorage.setItem("oyusec_journal",$("journal").value);
+ $("journalStatus").textContent="Notas guardadas en este navegador.";
+};
+$("journal").addEventListener("input",()=>{try{localStorage.setItem("oyusec_journal",$("journal").value);$("journalStatus").textContent="Guardado automáticamente en este navegador.";}catch{}});
+$("downloadJournal").onclick=()=>{
+ const blob=new Blob([$ ("journal").value],{type:"text/plain;charset=utf-8"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="oyusec-notas.txt";a.click();URL.revokeObjectURL(a.href);
+};
+
+loadChecks();
+</script>
+</body>
+</html>
